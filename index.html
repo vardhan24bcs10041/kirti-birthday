@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Happy Birthday, Kirti 🎧🍓</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="background-bubbles"></div>
+    <header class="site-header">
+      <div class="logo-mark">
+        <span class="logo-cat">🐾</span>
+        <span class="logo-text">For Kirti</span>
+      </div>
+      <nav class="site-nav">
+        <button class="nav-link" data-scroll-target="#landing">Home</button>
+        <button class="nav-link" data-scroll-target="#story">Story</button>
+        <button class="nav-link" data-scroll-target="#music">Music</button>
+        <button class="nav-link" data-scroll-target="#drink">Drink</button>
+        <button class="nav-link" data-scroll-target="#timeline">Memories</button>
+        <button class="nav-link" data-scroll-target="#final-letter">Letter</button>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+          <span id="theme-icon">🌞</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- 1. Landing Screen -->
+    <main>
+      <section id="landing" class="section section-landing">
+        <div class="landing-content">
+          <div class="landing-text">
+            <p class="eyebrow">A little interactive birthday story for</p>
+            <h1>
+              Happy Birthday, <span class="name-highlight">Kirti</span>
+            </h1>
+            <p class="subtitle">
+              Press play to start the very bakchod tale of a girl who who goes by many names, but my personal favourite is Baby Zombie, and one idiot who replied “do you ever smile?”.
+            </p>
+            <button id="start-journey-btn" class="primary-btn">
+              ▶ Start the celebration
+            </button>
+            <p class="hint-text">Best experienced with headphones on.</p>
+          </div>
+          <div class="landing-visual">
+            <div class="landing-images-container">
+              <!-- Kirti's photo - main focal point -->
+              <div class="kirti-photo-wrapper">
+                <img
+                  src="assets/images/kirti-photo.jpg.jpeg"
+                  alt="Kirti"
+                  class="kirti-photo"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                />
+                <!-- Fallback to cat DJ illustration if image not found -->
+                <div class="cat-dj-illustration" style="display: none;">
+                  <div class="cat-ears"></div>
+                  <div class="cat-face">
+                    <span class="cat-eye left"></span>
+                    <span class="cat-eye right"></span>
+                    <span class="cat-mouth"></span>
+                  </div>
+                  <div class="cat-headphones"></div>
+                </div>
+              </div>
+
+              <!-- Ginger ale bottle image -->
+              <div class="gingerale-image-wrapper">
+                <img
+                  src="assets/images/gingerale-bottle.png"
+                  alt="Ginger Ale"
+                  class="gingerale-image"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                />
+                <!-- Fallback to CSS bottle if image not found -->
+                <div class="gingerale-bottle" style="display: none;">
+                  <span class="label">Ginger Ale</span>
+                </div>
+              </div>
+
+              <!-- Strawberries images -->
+              <div class="strawberries-image-wrapper">
+                <img
+                  src="assets/images/strawberries.png.png"
+                  alt="Strawberries"
+                  class="strawberry-image strawberry-img-1"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                />
+                <!-- Fallback to CSS strawberries if image not found -->
+                <div class="strawberry-fallback" style="display: none;">
+                  <div class="strawberry strawberry-1"></div>
+                  <div class="strawberry strawberry-2"></div>
+                </div>
+              </div>
+
+              <!-- Optional: Keep DJ deck as decorative element -->
+              <div class="dj-deck">
+                <div class="vinyl left"></div>
+                <div class="vinyl right"></div>
+                <div class="slider"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="floating-notes">
+          <span>♪</span>
+          <span>♩</span>
+          <span>♬</span>
+          <span>♥</span>
+        </div>
+        <!-- Hidden easter egg cat - click it! -->
+        <button id="hidden-cat-easter-egg" class="hidden-cat-btn" aria-label="Hidden easter egg">
+          🐱
+        </button>
+      </section>
+
+      <!-- 2. Cat-Themed Intro Story Screen -->
+      <section id="story" class="section section-story">
+        <div class="section-header">
+          <p class="eyebrow">Chapter One</p>
+          <h2>Pinterest wali Ladki, her ghada, and the Mickey Mouse Smile</h2>
+          <p class="subtitle">
+            Once upon an Instagram story, someone asked “do you ever smile?” and you
+            answered “I look like Mickey Mouse when I do”. Somehow, that turned into
+            late-night rants, trauma bonding, Vibe Matching, meme wars and what not.
+          </p>
+        </div>
+        <div class="cat-cards-grid">
+          <article class="cat-card" data-modal-id="cat-gingerale">
+            <h3>The One Who Outruns Meltdowns</h3>
+            <p>All‑nighters, panic, and somehow still passing.</p>
+          </article>
+          <article class="cat-card" data-modal-id="cat-strawberries">
+            <h3>Teddy &amp; Tarzan Supremacy</h3>
+            <p>Two cats, zero boundaries, infinite kisses.</p>
+          </article>
+          <article class="cat-card" data-modal-id="cat-tvgirl">
+            <h3>The Girl Who Overthinks to Music</h3>
+            <p>Lyrics, spirals, and “no, I’m fine, it’s just the song”.</p>
+          </article>
+          <article class="cat-card" data-modal-id="cat-secret">
+            <h3>The Secret Fourth Cat</h3>
+            <p>A tiny easter egg, just for you (and your villain arc).</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- 3. Music Player Section -->
+      <section id="music" class="section section-music">
+        <div class="section-header">
+          <p class="eyebrow">Chapter Two</p>
+          <h2>Your Birthday Soundtrack</h2>
+          <p class="subtitle">
+            A tiny playlist for the performative girl who makes TV Girl and every
+            other song sound like a personality trait.
+          </p>
+        </div>
+        <div class="music-player">
+          <div class="album-art">
+            <img id="album-art-image" src="assets/images/album-art.jpg.png" alt="Album Art" class="album-art-img" onerror="this.style.display='none';" />
+            <div class="album-overlay"></div>
+            <div class="album-title">For Kirti</div>
+          </div>
+          <div class="player-info">
+            <p id="track-title" class="track-title">Track title</p>
+            <p id="track-artist" class="track-artist">Artist</p>
+          </div>
+          <div class="player-controls">
+            <button id="prev-btn" class="icon-btn">⏮</button>
+            <button id="play-pause-btn" class="icon-btn primary">▶</button>
+            <button id="next-btn" class="icon-btn">⏭</button>
+          </div>
+          <div class="player-progress">
+            <span id="current-time">0:00</span>
+            <div class="progress-bar" id="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <span id="duration">0:00</span>
+          </div>
+          <p class="player-hint">Tip: Press the spacebar to play / pause.</p>
+          <audio id="audio-element"></audio>
+        </div>
+      </section>
+
+      <!-- 4. Strawberry & Ginger Ale Virtual Drink -->
+      <section id="drink" class="section section-drink">
+        <div class="section-header">
+          <p class="eyebrow">Chapter Three</p>
+          <h2>Mix Your Birthday Drink</h2>
+          <p class="subtitle">
+            Two ingredients. Infinite possible vibes. Somewhere between soft strawberry
+            and “I survived exam week” ginger ale.
+          </p>
+        </div>
+        <div class="drink-layout">
+          <div class="drink-visual">
+            <div class="glass">
+              <div class="liquid" id="drink-liquid"></div>
+              <div class="bubbles" id="drink-bubbles"></div>
+              <div class="floating-berry berry-1"></div>
+              <div class="floating-berry berry-2"></div>
+            </div>
+          </div>
+          <div class="drink-controls">
+            <div class="slider-group">
+              <label for="strawberry-range">
+                Strawberry sweetness
+                <span id="strawberry-value">50</span>%
+              </label>
+              <input
+                type="range"
+                id="strawberry-range"
+                min="0"
+                max="100"
+                value="50"
+              />
+            </div>
+            <div class="slider-group">
+              <label for="ginger-range">
+                Ginger ale fizz
+                <span id="ginger-value">50</span>%
+              </label>
+              <input type="range" id="ginger-range" min="0" max="100" value="50" />
+            </div>
+            <button id="generate-toast-btn" class="secondary-btn">
+              Generate your birthday toast
+            </button>
+            <div id="toast-output" class="toast-output">
+              Move the sliders and I’ll describe your drink.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Memory Timeline -->
+      <section id="timeline" class="section section-timeline">
+        <div class="section-header">
+          <p class="eyebrow">Chapter Four</p>
+          <h2>Our Story So Far</h2>
+          <p class="subtitle">
+            A tiny timeline of how an Instagram reply, some anxiety, too many all‑nighters,
+            and two cats somehow turned into “we made it through”.
+          </p>
+        </div>
+        <div id="timeline-container" class="timeline-container">
+          <!-- Timeline cards will be injected by JS -->
+        </div>
+      </section>
+
+      <!-- 6. Final Letter -->
+      <section id="final-letter" class="section section-final">
+        <div class="section-header">
+          <p class="eyebrow">Final Chapter</p>
+          <h2>Dear Kirti</h2>
+        </div>
+        <div id="letter-card" class="letter-card">
+          <p class="letter-body">
+            Dear Kirti,<br /><br />
+            Thank you for somehow turning a dumb “do you ever smile?” reply into this
+            very real, very unhinged little corner of the internet. You call yourself
+            Mickey Mouse when you smile, you’re nonchalant, confident and a little bitch, but most importantly you're one of the best people I've ever met and I'm genuinely grateful to have you in my life.
+            You somehow still know your friends (especially me) better than I myself do.<br /><br />
+            We’ve sat through anxiety, all‑nighters, panic attacks, sleep deprivation and
+            Manipulative music core spirals and binge watching way too many shit, and you still made it through — we made it through —
+            even when it felt like everything was way too much. I always loved your cat updates and absolutely adore the way you love them more than anything. Somewhere our quid pro quos and your “I’m fine” texts, you became
+            one of the people I’m genuinely grateful exists.<br /><br />
+            So happy birthday, and also: thank you for not blocking me. Yet.
+          </p>
+          <button id="reveal-surprise-btn" class="primary-btn">
+            Reveal your surprise
+          </button>
+          <div id="surprise-content" class="surprise-content hidden">
+            <p class="surprise-text">
+              Surprise: this whole page is yours to keep. Screenshot it, save it, open it
+              on bad days. You’re loved, loudly.
+            </p>
+            <button id="download-postcard-btn" class="secondary-btn">
+              Download this as a postcard
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modals for cat cards and other easter eggs -->
+    <div id="modal-backdrop" class="modal-backdrop hidden">
+      <div class="modal">
+        <button class="modal-close-btn" id="modal-close-btn">×</button>
+        <h3 id="modal-title"></h3>
+        <p id="modal-body"></p>
+      </div>
+    </div>
+
+    <script src="js/modals.js"></script>
+    <script src="js/musicPlayer.js"></script>
+    <script src="js/drinkMixer.js"></script>
+    <script src="js/timeline.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
+
+
