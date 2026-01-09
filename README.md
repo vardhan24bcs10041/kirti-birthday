@@ -10,7 +10,7 @@ An interactive birthday website featuring:
 
 ## Live Site
 
-Visit the deployed site: [Your GitHub Pages URL will appear here]
+Visit the deployed site: https://vardhan24bcs10041.github.io/kirti-birthday/
 
 ## Features
 
