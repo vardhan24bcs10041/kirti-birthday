@@ -27,7 +27,7 @@ const modalContentMap = {
       "while pretending to hate it. Honestly, they own the lease and we’re just visiting.",
   },
   "cat-tvgirl": {
-    title: "The Girl Who Overthinks to Radiohead",
+    title: "The Girl Who Zones out to TV Girl",
     body:
       "It’s you, a pair of headphones, a 'fw heavy' song that goes way too hard for no reason, and fifteen different spirals happening at once. " +
       "You call it \"I’m fine\". I call it main character behaviour.",
