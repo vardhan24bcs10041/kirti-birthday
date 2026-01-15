@@ -31,7 +31,7 @@ document.querySelectorAll(".cat-card").forEach((card) => {
   });
 });
 
-// Final letter → confetti + reveal surprise + fake postcard download
+// Final letter → confetti + reveal surprise + postcard download
 const revealBtn = document.getElementById("reveal-surprise-btn");
 const surpriseContent = document.getElementById("surprise-content");
 
@@ -43,14 +43,47 @@ if (revealBtn && surpriseContent) {
 }
 
 const downloadBtn = document.getElementById("download-postcard-btn");
-if (downloadBtn) {
-  downloadBtn.addEventListener("click", () => {
-    // Minimal placeholder behavior:
-    // In a more advanced version you can integrate html2canvas to export the letter as an image.
+const letterCard = document.getElementById("letter-card");
+
+async function downloadPostcard() {
+  if (!letterCard) return;
+
+  // If html2canvas is missing for some reason, fall back gracefully
+  if (typeof window.html2canvas !== "function") {
     alert(
-      "For now, take a screenshot of this letter as your postcard.\n\n(If you want, we can later add real 'download as image' functionality.)"
+      "Your browser couldn't load the postcard download helper.\n\n" +
+        "Please take a screenshot of this letter as your postcard."
     );
-  });
+    return;
+  }
+
+  try {
+    // Slightly increase resolution for a nicer-looking image
+    const scale = window.devicePixelRatio || 2;
+    const canvas = await window.html2canvas(letterCard, {
+      scale,
+      useCORS: true,
+      backgroundColor: null,
+    });
+
+    const dataUrl = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = "kirti-birthday-postcard.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (err) {
+    console.error("Postcard download failed:", err);
+    alert(
+      "Something went wrong while creating the postcard image.\n\n" +
+        "You can still take a screenshot and save it manually."
+    );
+  }
+}
+
+if (downloadBtn) {
+  downloadBtn.addEventListener("click", downloadPostcard);
 }
 
 // Lightweight confetti using DOM elements
@@ -81,6 +114,9 @@ function launchConfetti() {
     document.querySelectorAll(".confetti-piece").forEach((el) => el.remove());
   }, 4000);
 }
+
+// Expose confetti globally for easter eggs
+window.launchConfetti = launchConfetti;
 
 // Theme toggle (light <-> dark / TV Girl mode)
 const themeToggleBtn = document.getElementById("theme-toggle");

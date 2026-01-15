@@ -53,6 +53,19 @@ const modalContentMap = {
       "Either way, you've unlocked: TV Girl Mode. The background should now look like a retro show poster. " +
       "Refresh the page to reset it. (Also, who taught you the Konami code? Respect.)",
   },
+  "secret-drink": {
+    title: "You Found the Secret Recipe",
+    body:
+      "You actually hit the one oddly specific strawberry–ginger combo I hid in here. " +
+      "This is the \"of course you overthought the sliders\" drink: a little too precise, a little too dramatic, and very, very you.",
+  },
+  "kirti-mode": {
+    title: "Achievement Unlocked: Main Character Track",
+    body:
+      "You just finished a track all the way through without skipping. " +
+      "That automatically makes it a Kirti-certified main character song. " +
+      "From now on, every time it plays, you're required by law to stare out of a fake window and act cinematic.",
+  },
 };
 
 function openModal(id, fallbackTitle, fallbackBody) {

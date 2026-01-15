@@ -59,6 +59,7 @@ const DEFAULT_ALBUM_ART = "assets/images/album-art.jpg.png";
 
 let currentTrackIndex = 0;
 let isPlaying = false;
+let kirtiModeUnlocked = false;
 
 function loadTrack(index) {
   const track = playlist[index];
@@ -143,6 +144,35 @@ function seek(e) {
   audioEl.currentTime = seekTime;
 }
 
+function handleTrackEnded() {
+  // Kirti mode easter egg: finishing the first track without skipping
+  if (!kirtiModeUnlocked && currentTrackIndex === 0) {
+    kirtiModeUnlocked = true;
+    
+    // Achievement celebration: confetti!
+    if (typeof window.launchConfetti === "function") {
+      window.launchConfetti();
+    }
+    
+    // Visual effect: add a glow to the album art
+    if (albumArtImg) {
+      const albumArtContainer = albumArtImg.closest(".album-art");
+      if (albumArtContainer) {
+        albumArtContainer.classList.add("achievement-glow");
+        setTimeout(() => {
+          albumArtContainer.classList.remove("achievement-glow");
+        }, 2000);
+      }
+    }
+    
+    if (typeof window.openModal === "function") {
+      window.openModal("kirti-mode");
+    }
+  }
+
+  nextTrack();
+}
+
 // Event wiring
 if (audioEl) {
   audioEl.addEventListener("play", () => {
@@ -157,7 +187,7 @@ if (audioEl) {
 
   audioEl.addEventListener("timeupdate", updateProgress);
   audioEl.addEventListener("loadedmetadata", updateProgress);
-  audioEl.addEventListener("ended", nextTrack);
+  audioEl.addEventListener("ended", handleTrackEnded);
 }
 
 if (playPauseBtn) {
