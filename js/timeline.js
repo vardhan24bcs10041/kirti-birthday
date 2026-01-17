@@ -69,8 +69,8 @@ function renderTimeline() {
     if (!inner) return;
     const entryId = inner.getAttribute("data-entry-id");
     const entry = timelineEntries.find((t) => t.id === entryId);
-    if (entry) {
-      openModal(entry.id, entry.title, entry.body);
+    if (entry && typeof window.openModal === "function") {
+      window.openModal(entry.id, entry.title, entry.body);
     }
   });
 }

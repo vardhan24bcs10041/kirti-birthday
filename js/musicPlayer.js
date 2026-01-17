@@ -149,25 +149,47 @@ function handleTrackEnded() {
   if (!kirtiModeUnlocked && currentTrackIndex === 0) {
     kirtiModeUnlocked = true;
     
-    // Achievement celebration: confetti!
-    if (typeof window.launchConfetti === "function") {
-      window.launchConfetti();
+    // Track discovery
+    if (typeof window.discoverEasterEgg === "function" && typeof window.EASTER_EGG_IDS !== "undefined") {
+      window.discoverEasterEgg(window.EASTER_EGG_IDS.KIRTI_MODE);
     }
     
-    // Visual effect: add a glow to the album art
+    // Celebration effects
+    if (typeof window.playSound === "function") {
+      window.playSound("achievement");
+    }
+    if (typeof window.launchConfetti === "function") {
+      window.launchConfetti(180); // More confetti for achievement
+    }
+    if (typeof window.showAchievementBadge === "function") {
+      window.showAchievementBadge("Main Character Track", "🎵");
+    }
+    if (typeof window.screenFlash === "function") {
+      window.screenFlash("rgba(255, 107, 156, 0.5)", 800);
+    }
+    if (typeof window.screenGlow === "function") {
+      window.screenGlow("rgba(183, 242, 217, 0.4)", 1200);
+    }
+    
+    // Enhanced visual effect: dramatic glow and pulse on album art
     if (albumArtImg) {
       const albumArtContainer = albumArtImg.closest(".album-art");
       if (albumArtContainer) {
         albumArtContainer.classList.add("achievement-glow");
+        albumArtContainer.classList.add("achievement-pulse");
         setTimeout(() => {
           albumArtContainer.classList.remove("achievement-glow");
-        }, 2000);
+          albumArtContainer.classList.remove("achievement-pulse");
+        }, 3000);
       }
     }
     
-    if (typeof window.openModal === "function") {
-      window.openModal("kirti-mode");
-    }
+    // Show modal after effects
+    setTimeout(() => {
+      if (typeof window.openModal === "function") {
+        window.openModal("kirti-mode");
+      }
+    }, 400);
   }
 
   nextTrack();

@@ -87,8 +87,7 @@ if (downloadBtn) {
 }
 
 // Lightweight confetti using DOM elements
-function launchConfetti() {
-  const count = 120;
+function launchConfetti(count = 120) {
   const fragment = document.createDocumentFragment();
 
   for (let i = 0; i < count; i += 1) {
@@ -117,6 +116,325 @@ function launchConfetti() {
 
 // Expose confetti globally for easter eggs
 window.launchConfetti = launchConfetti;
+
+// ============================================
+// SOUND EFFECTS SYSTEM
+// ============================================
+
+// Create sound effects using Web Audio API
+function playSound(type = "success") {
+  try {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    // Different sounds for different easter eggs
+    switch (type) {
+      case "success":
+        // Pleasant chime
+        oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+        oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+        oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+        oscillator.type = "sine";
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.4);
+        break;
+      case "achievement":
+        // Triumphant fanfare
+        oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A4
+        oscillator.frequency.setValueAtTime(554.37, audioContext.currentTime + 0.15); // C#5
+        oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.3); // E5
+        oscillator.type = "sine";
+        gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+        break;
+      case "konami":
+        // Retro game sound
+        oscillator.frequency.setValueAtTime(330, audioContext.currentTime);
+        oscillator.frequency.setValueAtTime(440, audioContext.currentTime + 0.1);
+        oscillator.frequency.setValueAtTime(554.37, audioContext.currentTime + 0.2);
+        oscillator.type = "square";
+        gainNode.gain.setValueAtTime(0.35, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.4);
+        break;
+      case "drink":
+        // Bubbly pop sound
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.15);
+        oscillator.type = "sine";
+        gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.2);
+        break;
+      default:
+        oscillator.frequency.value = 523.25;
+        oscillator.type = "sine";
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+    }
+  } catch (error) {
+    // Silently fail if audio context is not available
+    console.log("Audio not available:", error);
+  }
+}
+
+// Expose sound function globally
+window.playSound = playSound;
+
+// ============================================
+// ACHIEVEMENT BADGE SYSTEM
+// ============================================
+
+function showAchievementBadge(title, emoji = "🎉") {
+  const badge = document.createElement("div");
+  badge.className = "achievement-badge";
+  badge.innerHTML = `
+    <div class="achievement-badge-content">
+      <span class="achievement-emoji">${emoji}</span>
+      <div class="achievement-text">
+        <div class="achievement-title">Achievement Unlocked!</div>
+        <div class="achievement-name">${title}</div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(badge);
+
+  // Trigger animation
+  requestAnimationFrame(() => {
+    badge.classList.add("show");
+  });
+
+  // Remove after animation
+  setTimeout(() => {
+    badge.classList.add("hide");
+    setTimeout(() => {
+      if (badge.parentNode) {
+        badge.parentNode.removeChild(badge);
+      }
+    }, 500);
+  }, 3000);
+}
+
+// Expose badge function globally
+window.showAchievementBadge = showAchievementBadge;
+
+// ============================================
+// SCREEN FLASH/GLOW EFFECTS
+// ============================================
+
+function screenFlash(color = "rgba(255, 107, 156, 0.4)", duration = 600) {
+  const flash = document.createElement("div");
+  flash.className = "screen-flash";
+  flash.style.backgroundColor = color;
+  document.body.appendChild(flash);
+
+  // Trigger flash
+  requestAnimationFrame(() => {
+    flash.classList.add("active");
+  });
+
+  // Remove after duration
+  setTimeout(() => {
+    flash.classList.remove("active");
+    setTimeout(() => {
+      if (flash.parentNode) {
+        flash.parentNode.removeChild(flash);
+      }
+    }, 300);
+  }, duration);
+}
+
+function screenGlow(color = "rgba(255, 107, 156, 0.3)", duration = 1000) {
+  const glow = document.createElement("div");
+  glow.className = "screen-glow";
+  glow.style.boxShadow = `0 0 100px 50px ${color}`;
+  document.body.appendChild(glow);
+
+  // Trigger glow
+  requestAnimationFrame(() => {
+    glow.classList.add("active");
+  });
+
+  // Remove after duration
+  setTimeout(() => {
+    glow.classList.remove("active");
+    setTimeout(() => {
+      if (glow.parentNode) {
+        glow.parentNode.removeChild(glow);
+      }
+    }, 400);
+  }, duration);
+}
+
+// Expose flash/glow functions globally
+window.screenFlash = screenFlash;
+window.screenGlow = screenGlow;
+
+// ============================================
+// EASTER EGG TRACKING SYSTEM
+// ============================================
+
+// List of all easter eggs with their unique IDs
+const EASTER_EGG_IDS = {
+  HIDDEN_CAT: "hidden-cat",
+  TRIPLE_CLICK_PHOTO: "triple-click-photo",
+  LOGO_5_CLICKS: "logo-click-5",
+  TARZAN_FACT: "tarzan-fact",
+  SECRET_DRINK: "secret-drink",
+  EMPTY_GLASS: "empty-glass",
+  MAXIMUM_CHAOS: "maximum-chaos",
+  NICE_NUMBER: "nice-number",
+  KIRTI_MODE: "kirti-mode",
+  MUSIC_NOTES: "music-notes",
+};
+
+const TOTAL_EASTER_EGGS = Object.keys(EASTER_EGG_IDS).length;
+
+// In-memory storage for current session only (resets on refresh)
+let discoveredEasterEggs = [];
+
+// Get discovered easter eggs (session only, resets on refresh)
+function getDiscoveredEasterEggs() {
+  return discoveredEasterEggs;
+}
+
+// Mark an easter egg as discovered (session only)
+function discoverEasterEgg(easterEggId) {
+  if (!discoveredEasterEggs.includes(easterEggId)) {
+    discoveredEasterEggs.push(easterEggId);
+    updateEasterEggCounter();
+    return true; // New discovery
+  }
+  return false; // Already discovered
+}
+
+// Reset counter on page load (clear any old localStorage data)
+function resetEasterEggCounter() {
+  discoveredEasterEggs = [];
+  // Also clear any old localStorage data if it exists
+  try {
+    localStorage.removeItem("kirti-bday-easter-eggs");
+  } catch {
+    // Ignore errors
+  }
+}
+
+// Celebration function for finding all easter eggs
+function celebrateAllEasterEggsFound() {
+  // Multiple confetti bursts
+  if (typeof window.launchConfetti === "function") {
+    window.launchConfetti(400);
+    setTimeout(() => window.launchConfetti(300), 500);
+    setTimeout(() => window.launchConfetti(200), 1000);
+  }
+  
+  // Sound effects
+  if (typeof window.playSound === "function") {
+    window.playSound("achievement");
+    setTimeout(() => window.playSound("success"), 300);
+  }
+  
+  // Screen effects
+  if (typeof window.screenFlash === "function") {
+    window.screenFlash("rgba(255, 107, 156, 0.6)", 1000);
+  }
+  if (typeof window.screenGlow === "function") {
+    setTimeout(() => window.screenGlow("rgba(183, 242, 217, 0.5)", 1500), 200);
+  }
+  
+  // Achievement badge
+  if (typeof window.showAchievementBadge === "function") {
+    setTimeout(() => {
+      window.showAchievementBadge("Master Explorer!", "🏆");
+    }, 400);
+  }
+  
+  // Show congratulatory modal
+  setTimeout(() => {
+    if (typeof window.openModal === "function") {
+      window.openModal("all-easter-eggs-found");
+    }
+  }, 800);
+}
+
+// Update the easter egg counter display
+function updateEasterEggCounter() {
+  const discovered = getDiscoveredEasterEggs();
+  const count = discovered.length;
+  const counterEl = document.getElementById("easter-egg-counter");
+  
+  if (counterEl) {
+    counterEl.textContent = `${count}/${TOTAL_EASTER_EGGS}`;
+    counterEl.setAttribute("data-count", count);
+    
+    // Make counter clickable and glowing when all are found
+    if (count === TOTAL_EASTER_EGGS) {
+      counterEl.classList.add("all-found");
+      counterEl.style.cursor = "pointer";
+      counterEl.setAttribute("title", "Click to celebrate! 🎉");
+    } else {
+      counterEl.classList.remove("all-found");
+      counterEl.style.cursor = "default";
+      counterEl.setAttribute("title", "Easter Eggs Found");
+    }
+  }
+}
+
+// Create and display easter egg counter
+function createEasterEggCounter() {
+  // Check if counter already exists
+  if (document.getElementById("easter-egg-counter")) return;
+  
+  const counter = document.createElement("div");
+  counter.id = "easter-egg-counter";
+  counter.className = "easter-egg-counter";
+  counter.setAttribute("title", "Easter Eggs Found");
+  
+  const discovered = getDiscoveredEasterEggs();
+  const count = discovered.length;
+  counter.textContent = `${count}/${TOTAL_EASTER_EGGS}`;
+  counter.setAttribute("data-count", count);
+  
+  // Add click handler for celebration (when all are found)
+  counter.addEventListener("click", () => {
+    const currentCount = parseInt(counter.getAttribute("data-count")) || 0;
+    if (currentCount === TOTAL_EASTER_EGGS) {
+      celebrateAllEasterEggsFound();
+    }
+  });
+  
+  document.body.appendChild(counter);
+  
+  // Update on load
+  updateEasterEggCounter();
+}
+
+// Expose functions and constants globally
+window.discoverEasterEgg = discoverEasterEgg;
+window.updateEasterEggCounter = updateEasterEggCounter;
+window.EASTER_EGG_IDS = EASTER_EGG_IDS;
+window.TOTAL_EASTER_EGGS = TOTAL_EASTER_EGGS;
+
+// Reset and initialize counter on page load
+resetEasterEggCounter();
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", createEasterEggCounter);
+} else {
+  createEasterEggCounter();
+}
 
 // Theme toggle (light <-> dark / TV Girl mode)
 const themeToggleBtn = document.getElementById("theme-toggle");
@@ -171,51 +489,213 @@ if (typeof window.closeModal === "function") {
 const hiddenCatBtn = document.getElementById("hidden-cat-easter-egg");
 if (hiddenCatBtn) {
   hiddenCatBtn.addEventListener("click", () => {
-    if (typeof window.openModal === "function") {
-      window.openModal("hidden-cat-secret", "You Found the Hidden Cat!", 
-        "Okay, you actually clicked the tiny floating cat. That's either dedication or you have way too much time. " +
-        "Either way, here's your reward: you're officially the kind of person who finds easter eggs. " +
-        "Also, Kirti, if you're reading this: you're the main character, even when you don't feel like it. " +
-        "Now go back and actually enjoy the birthday page instead of hunting for secrets. (But also, good job.)"
-      );
+    // Track discovery
+    if (typeof window.discoverEasterEgg === "function") {
+      window.discoverEasterEgg(EASTER_EGG_IDS.HIDDEN_CAT);
     }
+    
+    // Celebration effects
+    if (typeof window.playSound === "function") {
+      window.playSound("success");
+    }
+    if (typeof window.launchConfetti === "function") {
+      window.launchConfetti(180); // More confetti for easter egg
+    }
+    if (typeof window.showAchievementBadge === "function") {
+      window.showAchievementBadge("Hidden Cat Discoverer", "🐱");
+    }
+    if (typeof window.screenFlash === "function") {
+      window.screenFlash("rgba(255, 107, 156, 0.5)", 800);
+    }
+    if (typeof window.screenGlow === "function") {
+      window.screenGlow("rgba(255, 107, 156, 0.4)", 1200);
+    }
+
+    // Animate the cat button
+    hiddenCatBtn.style.transform = "scale(1.3) rotate(360deg)";
+    hiddenCatBtn.style.transition = "transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)";
+    setTimeout(() => {
+      hiddenCatBtn.style.transform = "";
+    }, 600);
+
+    // Show modal after a brief delay for effects
+    setTimeout(() => {
+      if (typeof window.openModal === "function") {
+        window.openModal("hidden-cat-secret", "You Found the Hidden Cat!", 
+          "Okay, you actually clicked the tiny floating cat. That's either dedication or you have way too much time. " +
+          "Either way, here's your reward: you're officially the kind of person who finds easter eggs. " +
+          "Also, Kirti, if you're reading this: you're the main character, even when you don't feel like it. " +
+          "Now go back and actually enjoy the birthday page instead of hunting for secrets. (But also, good job.)"
+        );
+      }
+    }, 300);
   });
 }
 
-// 2. Konami Code easter egg (Up Up Down Down Left Right Left Right B A)
-// This triggers a TV Girl-inspired background transformation
-const konamiCode = [
-  "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
-  "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
-  "KeyB", "KeyA"
-];
-let konamiIndex = 0;
+// ============================================
+// CLICK/TAP PATTERN EASTER EGGS
+// ============================================
 
-document.addEventListener("keydown", (e) => {
-  if (konamiCode[konamiIndex] === e.code) {
-    konamiIndex++;
-    if (konamiIndex === konamiCode.length) {
-      // Konami code completed!
-      konamiIndex = 0;
-      const body = document.body;
-      body.classList.add("konami-activated");
-      
-      // Show a fun message
-      if (typeof window.openModal === "function") {
-        window.openModal("konami-secret", "🎮 Konami Code Activated!", 
-          "You just entered the Konami code. That's either impressive dedication or you're a gamer from the '80s. " +
-          "Either way, you've unlocked: TV Girl Mode. The background should now look like a retro show poster. " +
-          "Refresh the page to reset it. (Also, who taught you the Konami code? Respect.)"
-        );
+// 3. Triple-click on Kirti's photo
+const kirtiPhoto = document.querySelector(".kirti-photo");
+if (kirtiPhoto) {
+  let clickCount = 0;
+  let clickTimeout;
+
+  kirtiPhoto.addEventListener("click", () => {
+    clickCount++;
+    clearTimeout(clickTimeout);
+
+    if (clickCount === 3) {
+      // Triple-click detected!
+      clickCount = 0;
+
+      // Track discovery
+      if (typeof window.discoverEasterEgg === "function") {
+        window.discoverEasterEgg(EASTER_EGG_IDS.TRIPLE_CLICK_PHOTO);
+      }
+
+      // Celebration effects
+      if (typeof window.playSound === "function") {
+        window.playSound("success");
+      }
+      if (typeof window.launchConfetti === "function") {
+        window.launchConfetti(150);
+      }
+      if (typeof window.showAchievementBadge === "function") {
+        window.showAchievementBadge("Photo Explorer", "📸");
+      }
+      if (typeof window.screenFlash === "function") {
+        window.screenFlash("rgba(255, 107, 156, 0.4)", 700);
+      }
+
+      // Animate the photo
+      kirtiPhoto.style.transform = "scale(1.1) rotate(5deg)";
+      kirtiPhoto.style.transition = "transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)";
+      setTimeout(() => {
+        kirtiPhoto.style.transform = "";
+      }, 500);
+
+      // Show modal
+      setTimeout(() => {
+        if (typeof window.openModal === "function") {
+          window.openModal("triple-click-photo");
+        }
+      }, 300);
+    }
+
+    // Reset counter after 1 second of no clicks
+    clickTimeout = setTimeout(() => {
+      clickCount = 0;
+    }, 1000);
+  });
+}
+
+// 4. Click logo 5 times
+const logoMark = document.querySelector(".logo-mark");
+if (logoMark) {
+  let logoClickCount = 0;
+  let logoClickTimeout;
+
+  logoMark.addEventListener("click", () => {
+    logoClickCount++;
+    clearTimeout(logoClickTimeout);
+
+    if (logoClickCount === 5) {
+      // Five clicks detected!
+      logoClickCount = 0;
+
+      // Track discovery
+      if (typeof window.discoverEasterEgg === "function") {
+        window.discoverEasterEgg(EASTER_EGG_IDS.LOGO_5_CLICKS);
+      }
+
+      // Celebration effects
+      if (typeof window.playSound === "function") {
+        window.playSound("achievement");
+      }
+      if (typeof window.launchConfetti === "function") {
+        window.launchConfetti(180);
+      }
+      if (typeof window.showAchievementBadge === "function") {
+        window.showAchievementBadge("Logo Master", "🎯");
+      }
+      if (typeof window.screenFlash === "function") {
+        window.screenFlash("rgba(183, 242, 217, 0.5)", 800);
+      }
+      if (typeof window.screenGlow === "function") {
+        window.screenGlow("rgba(255, 107, 156, 0.4)", 1200);
+      }
+
+      // Animate the logo
+      logoMark.style.transform = "scale(1.2) rotate(360deg)";
+      logoMark.style.transition = "transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)";
+      setTimeout(() => {
+        logoMark.style.transform = "";
+      }, 800);
+
+      // Show modal
+      setTimeout(() => {
+        if (typeof window.openModal === "function") {
+          window.openModal("logo-click-5");
+        }
+      }, 400);
+    }
+
+    // Reset counter after 2 seconds of no clicks
+    logoClickTimeout = setTimeout(() => {
+      logoClickCount = 0;
+    }, 2000);
+  });
+}
+
+
+// ============================================
+// VISUAL/UI INTERACTION EASTER EGGS
+// ============================================
+
+// 6. Click floating music notes → Makes them dance
+const floatingNotes = document.querySelector(".floating-notes");
+if (floatingNotes) {
+  const noteSpans = floatingNotes.querySelectorAll("span");
+  let musicNotesDiscovered = false;
+  
+  noteSpans.forEach((note) => {
+    note.addEventListener("click", () => {
+      // Track discovery (only once for all notes)
+      if (!musicNotesDiscovered && typeof window.discoverEasterEgg === "function") {
+        window.discoverEasterEgg(EASTER_EGG_IDS.MUSIC_NOTES);
+        musicNotesDiscovered = true;
+        
+        // Celebration effects on first discovery
+        if (typeof window.playSound === "function") {
+          window.playSound("success");
+        }
+        if (typeof window.launchConfetti === "function") {
+          window.launchConfetti(120);
+        }
+        if (typeof window.showAchievementBadge === "function") {
+          window.showAchievementBadge("Music Note Dancer", "♪");
+        }
+      } else {
+        // Just play sound for subsequent clicks
+        if (typeof window.playSound === "function") {
+          window.playSound("success");
+        }
       }
       
-      // Reset after 30 seconds
+      // Make the note dance
+      note.classList.remove("dancing");
+      // Force reflow to retrigger animation
+      // eslint-disable-next-line no-unused-expressions
+      note.offsetHeight;
+      note.classList.add("dancing");
+      
+      // Remove class after animation
       setTimeout(() => {
-        body.classList.remove("konami-activated");
-      }, 30000);
-    }
-  } else {
-    konamiIndex = 0; // Reset on wrong key
-  }
-});
+        note.classList.remove("dancing");
+      }, 600);
+    });
+  });
+}
 
