@@ -302,34 +302,62 @@ const EASTER_EGG_IDS = {
 };
 
 const TOTAL_EASTER_EGGS = Object.keys(EASTER_EGG_IDS).length;
+const STORAGE_KEY = "kirti-bday-easter-eggs";
 
-// In-memory storage for current session only (resets on refresh)
+// Load discovered easter eggs from localStorage on initialization
 let discoveredEasterEggs = [];
 
-// Get discovered easter eggs (session only, resets on refresh)
+// Load easter eggs from localStorage
+function loadEasterEggsFromStorage() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        discoveredEasterEggs = parsed;
+        return;
+      }
+    }
+  } catch (error) {
+    console.log("Error loading easter eggs from storage:", error);
+  }
+  discoveredEasterEggs = [];
+}
+
+// Save easter eggs to localStorage
+function saveEasterEggsToStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(discoveredEasterEggs));
+  } catch (error) {
+    console.log("Error saving easter eggs to storage:", error);
+  }
+}
+
+// Get discovered easter eggs
 function getDiscoveredEasterEggs() {
   return discoveredEasterEggs;
 }
 
-// Mark an easter egg as discovered (session only)
+// Mark an easter egg as discovered (persists to localStorage)
 function discoverEasterEgg(easterEggId) {
   if (!discoveredEasterEggs.includes(easterEggId)) {
     discoveredEasterEggs.push(easterEggId);
+    saveEasterEggsToStorage();
     updateEasterEggCounter();
     return true; // New discovery
   }
   return false; // Already discovered
 }
 
-// Reset counter on page load (clear any old localStorage data)
+// Reset counter (clears localStorage) - only called after confirmation
 function resetEasterEggCounter() {
   discoveredEasterEggs = [];
-  // Also clear any old localStorage data if it exists
   try {
-    localStorage.removeItem("kirti-bday-easter-eggs");
-  } catch {
-    // Ignore errors
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (error) {
+    console.log("Error removing easter eggs from storage:", error);
   }
+  updateEasterEggCounter();
 }
 
 // Celebration function for finding all easter eggs
@@ -384,11 +412,11 @@ function updateEasterEggCounter() {
     if (count === TOTAL_EASTER_EGGS) {
       counterEl.classList.add("all-found");
       counterEl.style.cursor = "pointer";
-      counterEl.setAttribute("title", "Click to celebrate! 🎉");
+      counterEl.setAttribute("title", "Click to celebrate! 🎉 (Long press to reset)");
     } else {
       counterEl.classList.remove("all-found");
       counterEl.style.cursor = "default";
-      counterEl.setAttribute("title", "Easter Eggs Found");
+      counterEl.setAttribute("title", "Easter Eggs Found (Long press to reset)");
     }
   }
 }
@@ -401,19 +429,77 @@ function createEasterEggCounter() {
   const counter = document.createElement("div");
   counter.id = "easter-egg-counter";
   counter.className = "easter-egg-counter";
-  counter.setAttribute("title", "Easter Eggs Found");
+  counter.setAttribute("title", "Easter Eggs Found (Long press to reset)");
   
   const discovered = getDiscoveredEasterEggs();
   const count = discovered.length;
   counter.textContent = `${count}/${TOTAL_EASTER_EGGS}`;
   counter.setAttribute("data-count", count);
   
-  // Add click handler for celebration (when all are found)
-  counter.addEventListener("click", () => {
-    const currentCount = parseInt(counter.getAttribute("data-count")) || 0;
-    if (currentCount === TOTAL_EASTER_EGGS) {
-      celebrateAllEasterEggsFound();
+  // Long-press detection variables
+  let longPressTimer = null;
+  let isLongPress = false;
+  const LONG_PRESS_DURATION = 800; // 800ms for long press
+  
+  // Function to show reset confirmation modal
+  function showResetConfirmation() {
+    if (typeof window.openModal === "function") {
+      window.openModal("reset-easter-eggs-confirmation");
     }
+  }
+  
+  // Handle touch start (mobile)
+  counter.addEventListener("touchstart", (e) => {
+    isLongPress = false;
+    longPressTimer = setTimeout(() => {
+      isLongPress = true;
+      showResetConfirmation();
+    }, LONG_PRESS_DURATION);
+  });
+  
+  // Handle touch end (mobile)
+  counter.addEventListener("touchend", (e) => {
+    clearTimeout(longPressTimer);
+    if (!isLongPress) {
+      // Regular tap - handle celebration if all found
+      const currentCount = parseInt(counter.getAttribute("data-count")) || 0;
+      if (currentCount === TOTAL_EASTER_EGGS) {
+        celebrateAllEasterEggsFound();
+      }
+    }
+  });
+  
+  // Handle touch cancel (mobile)
+  counter.addEventListener("touchcancel", () => {
+    clearTimeout(longPressTimer);
+    isLongPress = false;
+  });
+  
+  // Handle mouse down (desktop)
+  counter.addEventListener("mousedown", (e) => {
+    isLongPress = false;
+    longPressTimer = setTimeout(() => {
+      isLongPress = true;
+      showResetConfirmation();
+    }, LONG_PRESS_DURATION);
+  });
+  
+  // Handle mouse up (desktop)
+  counter.addEventListener("mouseup", (e) => {
+    clearTimeout(longPressTimer);
+    if (!isLongPress && e.button === 0) {
+      // Regular click - handle celebration if all found
+      const currentCount = parseInt(counter.getAttribute("data-count")) || 0;
+      if (currentCount === TOTAL_EASTER_EGGS) {
+        celebrateAllEasterEggsFound();
+      }
+    }
+  });
+  
+  // Handle mouse leave (desktop) - cancel long press if mouse leaves element
+  counter.addEventListener("mouseleave", () => {
+    clearTimeout(longPressTimer);
+    isLongPress = false;
   });
   
   document.body.appendChild(counter);
@@ -425,11 +511,12 @@ function createEasterEggCounter() {
 // Expose functions and constants globally
 window.discoverEasterEgg = discoverEasterEgg;
 window.updateEasterEggCounter = updateEasterEggCounter;
+window.resetEasterEggCounter = resetEasterEggCounter;
 window.EASTER_EGG_IDS = EASTER_EGG_IDS;
 window.TOTAL_EASTER_EGGS = TOTAL_EASTER_EGGS;
 
-// Reset and initialize counter on page load
-resetEasterEggCounter();
+// Load from localStorage and initialize counter on page load
+loadEasterEggsFromStorage();
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", createEasterEggCounter);
 } else {

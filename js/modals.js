@@ -115,6 +115,18 @@ const modalContentMap = {
       "Thank you for taking the time to explore every corner of your birthday page. " +
       "You're amazing Baby Zombie! 🏆✨",
   },
+  "reset-easter-eggs-confirmation": {
+    title: "Reset Easter Egg Counter?",
+    body:
+      '<div class="reset-confirmation-content">' +
+      '<p>Are you sure you want to reset the easter egg counter? All discovered easter eggs will be cleared.</p>' +
+      '<div class="modal-actions">' +
+      '<button id="confirm-reset-btn" class="primary-btn">Yes, Reset</button>' +
+      '<button id="cancel-reset-btn" class="secondary-btn">Cancel</button>' +
+      '</div>' +
+      '</div>',
+    isHTML: true,
+  },
 };
 
 function openModal(id, fallbackTitle, fallbackBody) {
@@ -175,6 +187,32 @@ function openModal(id, fallbackTitle, fallbackBody) {
       modalBodyEl.textContent = content.body;
     }
   }
+  
+  // Special handling for reset confirmation modal
+  if (id === "reset-easter-eggs-confirmation") {
+    // Add event listeners after a short delay to ensure DOM is updated
+    setTimeout(() => {
+      const confirmBtn = document.getElementById("confirm-reset-btn");
+      const cancelBtn = document.getElementById("cancel-reset-btn");
+      
+      if (confirmBtn) {
+        confirmBtn.addEventListener("click", () => {
+          // Reset the easter egg counter
+          if (typeof window.resetEasterEggCounter === "function") {
+            window.resetEasterEggCounter();
+          }
+          closeModal();
+        });
+      }
+      
+      if (cancelBtn) {
+        cancelBtn.addEventListener("click", () => {
+          closeModal();
+        });
+      }
+    }, 10);
+  }
+  
   if (modalBackdrop) {
     modalBackdrop.classList.remove("hidden");
     modalBackdrop.style.display = "flex";

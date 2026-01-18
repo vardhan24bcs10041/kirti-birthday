@@ -1440,6 +1440,32 @@ body[data-theme="dark"] .modal h3 {
   max-width: 100%;
 }
 
+/* Reset confirmation modal */
+.reset-confirmation-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+.reset-confirmation-content p {
+  margin: 0;
+  text-align: center;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.modal-actions .primary-btn,
+.modal-actions .secondary-btn {
+  min-width: 120px;
+  flex: 1 1 auto;
+}
+
 @media (max-width: 768px) {
   .modal {
     max-width: 95%;
@@ -1459,6 +1485,21 @@ body[data-theme="dark"] .modal h3 {
   .tarzan-modal-content p {
     font-size: 0.9rem;
     line-height: 1.5;
+  }
+  
+  .reset-confirmation-content {
+    gap: 1rem;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  
+  .modal-actions .primary-btn,
+  .modal-actions .secondary-btn {
+    width: 100%;
+    min-width: unset;
   }
 }
 
