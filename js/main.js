@@ -96,7 +96,8 @@ function isMobileDevice() {
 function launchConfetti(count = 120) {
   // Reduce count on mobile devices for better performance
   const isMobile = isMobileDevice();
-  const actualCount = isMobile ? Math.min(count, 60) : count;
+  // Further reduce max count on mobile for celebration scenarios
+  const actualCount = isMobile ? Math.min(count, 50) : count;
   
   // Clean up any existing confetti first to prevent accumulation
   const existingConfetti = document.querySelectorAll(".confetti-piece");
@@ -105,14 +106,15 @@ function launchConfetti(count = 120) {
   }
   
   const fragment = document.createDocumentFragment();
-  const maxDuration = 2.5; // Slightly longer for smoother cleanup
+  // Faster animations on mobile mean shorter cleanup time
+  const maxDuration = isMobile ? 1.8 : 2.5;
 
   for (let i = 0; i < actualCount; i += 1) {
     const piece = document.createElement("div");
     piece.className = "confetti-piece";
     const left = Math.random() * 100;
-    const delay = Math.random() * 0.8; // Reduced delay range
-    const duration = isMobile ? 2.0 + Math.random() * 0.5 : 2.2 + Math.random() * 0.8;
+    const delay = isMobile ? Math.random() * 0.4 : Math.random() * 0.8; // Shorter delay on mobile
+    const duration = isMobile ? 1.5 + Math.random() * 0.3 : 2.2 + Math.random() * 0.8; // Faster on mobile
     const rotate = Math.random() * 360;
 
     piece.style.left = `${left}vw`;
@@ -125,8 +127,8 @@ function launchConfetti(count = 120) {
 
   document.body.appendChild(fragment);
 
-  // Clean up after animation - use longer timeout to ensure all pieces are removed
-  const cleanupDelay = (isMobile ? 3000 : maxDuration * 1000) + 500;
+  // Clean up after animation - faster on mobile since animations are shorter
+  const cleanupDelay = (isMobile ? maxDuration * 1000 + 200 : maxDuration * 1000) + 500;
   setTimeout(() => {
     const pieces = document.querySelectorAll(".confetti-piece");
     pieces.forEach((el) => el.remove());
@@ -383,11 +385,11 @@ function resetEasterEggCounter() {
 function celebrateAllEasterEggsFound() {
   const isMobile = isMobileDevice();
   
-  // Reduced confetti bursts for better mobile performance
+  // Heavily reduced confetti on mobile for better performance
   if (typeof window.launchConfetti === "function") {
     if (isMobile) {
-      // Single burst with reduced count on mobile
-      window.launchConfetti(80);
+      // Minimal confetti on mobile - just enough to celebrate
+      window.launchConfetti(40);
     } else {
       // Multiple bursts on desktop (still reduced from original)
       window.launchConfetti(150);
@@ -396,33 +398,38 @@ function celebrateAllEasterEggsFound() {
     }
   }
   
-  // Sound effects
+  // Sound effects (lightweight, keep these)
   if (typeof window.playSound === "function") {
     window.playSound("achievement");
-    setTimeout(() => window.playSound("success"), 300);
+    if (!isMobile) {
+      // Only play second sound on desktop
+      setTimeout(() => window.playSound("success"), 300);
+    }
   }
   
-  // Screen effects
-  if (typeof window.screenFlash === "function") {
-    window.screenFlash("rgba(255, 107, 156, 0.6)", 1000);
-  }
-  if (typeof window.screenGlow === "function") {
-    setTimeout(() => window.screenGlow("rgba(183, 242, 217, 0.5)", 1500), 200);
+  // Screen effects - DISABLED on mobile for performance
+  if (!isMobile) {
+    if (typeof window.screenFlash === "function") {
+      window.screenFlash("rgba(255, 107, 156, 0.6)", 1000);
+    }
+    if (typeof window.screenGlow === "function") {
+      setTimeout(() => window.screenGlow("rgba(183, 242, 217, 0.5)", 1500), 200);
+    }
   }
   
-  // Achievement badge
+  // Achievement badge - delayed more on mobile
   if (typeof window.showAchievementBadge === "function") {
     setTimeout(() => {
       window.showAchievementBadge("Master Explorer!", "🏆");
-    }, 400);
+    }, isMobile ? 600 : 400);
   }
   
-  // Show congratulatory modal
+  // Show congratulatory modal - delayed significantly on mobile to let confetti finish
   setTimeout(() => {
     if (typeof window.openModal === "function") {
       window.openModal("all-easter-eggs-found");
     }
-  }, 800);
+  }, isMobile ? 2000 : 800); // 2 second delay on mobile vs 800ms on desktop
 }
 
 // Update the easter egg counter display
