@@ -87,15 +87,32 @@ if (downloadBtn) {
 }
 
 // Lightweight confetti using DOM elements
-function launchConfetti(count = 120) {
-  const fragment = document.createDocumentFragment();
+// Detects mobile devices for optimized performance
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+    (window.innerWidth <= 768 && 'ontouchstart' in window);
+}
 
-  for (let i = 0; i < count; i += 1) {
+function launchConfetti(count = 120) {
+  // Reduce count on mobile devices for better performance
+  const isMobile = isMobileDevice();
+  const actualCount = isMobile ? Math.min(count, 60) : count;
+  
+  // Clean up any existing confetti first to prevent accumulation
+  const existingConfetti = document.querySelectorAll(".confetti-piece");
+  if (existingConfetti.length > 0) {
+    existingConfetti.forEach((el) => el.remove());
+  }
+  
+  const fragment = document.createDocumentFragment();
+  const maxDuration = 2.5; // Slightly longer for smoother cleanup
+
+  for (let i = 0; i < actualCount; i += 1) {
     const piece = document.createElement("div");
     piece.className = "confetti-piece";
     const left = Math.random() * 100;
-    const delay = Math.random() * 1.2;
-    const duration = 2.2 + Math.random() * 0.8;
+    const delay = Math.random() * 0.8; // Reduced delay range
+    const duration = isMobile ? 2.0 + Math.random() * 0.5 : 2.2 + Math.random() * 0.8;
     const rotate = Math.random() * 360;
 
     piece.style.left = `${left}vw`;
@@ -108,10 +125,12 @@ function launchConfetti(count = 120) {
 
   document.body.appendChild(fragment);
 
-  // Clean up after animation
+  // Clean up after animation - use longer timeout to ensure all pieces are removed
+  const cleanupDelay = (isMobile ? 3000 : maxDuration * 1000) + 500;
   setTimeout(() => {
-    document.querySelectorAll(".confetti-piece").forEach((el) => el.remove());
-  }, 4000);
+    const pieces = document.querySelectorAll(".confetti-piece");
+    pieces.forEach((el) => el.remove());
+  }, cleanupDelay);
 }
 
 // Expose confetti globally for easter eggs
@@ -362,11 +381,19 @@ function resetEasterEggCounter() {
 
 // Celebration function for finding all easter eggs
 function celebrateAllEasterEggsFound() {
-  // Multiple confetti bursts
+  const isMobile = isMobileDevice();
+  
+  // Reduced confetti bursts for better mobile performance
   if (typeof window.launchConfetti === "function") {
-    window.launchConfetti(400);
-    setTimeout(() => window.launchConfetti(300), 500);
-    setTimeout(() => window.launchConfetti(200), 1000);
+    if (isMobile) {
+      // Single burst with reduced count on mobile
+      window.launchConfetti(80);
+    } else {
+      // Multiple bursts on desktop (still reduced from original)
+      window.launchConfetti(150);
+      setTimeout(() => window.launchConfetti(120), 400);
+      setTimeout(() => window.launchConfetti(80), 800);
+    }
   }
   
   // Sound effects
